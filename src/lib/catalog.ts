@@ -10,8 +10,7 @@ export const CHAIN_ID = 4663;
 export const CHAIN_NAME = "Robinhood Chain";
 export const EXPLORER_URL = "https://robinhoodchain.blockscout.com";
 
-/** Empty until Remix + LetsCash. Never invent. */
-export const TOKEN_CA = "";
+export const TOKEN_CA = "0x566b25b7108f7d308cdaab9df32b1f4c444edbcc";
 export const PIT_CA = "0x74Fe3e0dC82dbDB69D50B854dd6f492f93f74dd9";
 
 export const TAX_BPS = 500;
