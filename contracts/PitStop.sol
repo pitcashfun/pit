@@ -2,10 +2,26 @@
 pragma solidity ^0.8.24;
 
 /// @title PitStop
-/// @notice LetsCash fee box on Robinhood Chain (4663).
-///         Stint: 3 minutes. Grid: 20. stop() then flag().
-///         Weight = recorded balance × compound. No merkle. No private keeper.
-///         1% bounty to flag() caller. Rest split to the grid.
+/// @notice The box on Robinhood Chain (4663).
+///
+///         PIT CASH. A pit stop with a clock.
+///         LetsCash fee ETH lands here. Nobody sells the token to pay the grid.
+///
+///         Stint: 3:00. Grid: 20 cars. One stop per wallet.
+///         stop(compound) while the clock runs. flag() when it dies.
+///         Anyone can throw the flag. 1% bounty. Rest to the twenty, by weight.
+///
+///         Soft  ×1  free stop, grid only
+///         Medium ×2  hold $PIT
+///         Hard   ×3  heaviest car on the wall
+///
+///         Miss the window → DNF that stint. The pot still moves.
+///         Next stint starts when the last one ends. No private keeper.
+///
+/// @custom:site      https://pitcash.fun
+/// @custom:x         https://x.com/pitcashfun
+/// @custom:github    https://github.com/pitcashfun/pit
+/// @custom:telegram  https://t.me/pitcashfun
 
 interface IERC20 {
     function balanceOf(address a) external view returns (uint256);
@@ -18,6 +34,9 @@ contract PitStop {
 
     string public constant SITE = "https://pitcash.fun";
     string public constant X = "https://x.com/pitcashfun";
+    string public constant GITHUB = "https://github.com/pitcashfun/pit";
+    string public constant TELEGRAM = "https://t.me/pitcashfun";
+    string public constant LINE = "The box. 3:00 stint. Twenty cars. Stop, or DNF.";
 
     address public owner;
     address public pitToken;
@@ -69,6 +88,7 @@ contract PitStop {
         emit TokenSet(token);
     }
 
+    /// @notice Call the box. compound 0 soft / 1 medium / 2 hard.
     function stop(uint8 compound) external {
         if (compound > 2) revert Bad();
         if (pitToken == address(0)) revert Bad();
@@ -86,6 +106,7 @@ contract PitStop {
         }
     }
 
+    /// @notice Anyone, after 3:00. Pays the grid. Opens the next stint.
     function flag() external {
         if (block.timestamp < stintEndsAt) revert Early();
         uint256 purse = pot;
