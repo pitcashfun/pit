@@ -25,6 +25,5 @@ desktop-bots/
 
 # leftover other launches
 public/till-*
-public/logo.jpg
 contracts/TillVault.sol
 github/

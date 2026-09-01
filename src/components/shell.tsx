@@ -16,8 +16,9 @@ export function Shell({ children }: { children: ReactNode }) {
         <div className="carbon">
           <div className="mx-auto flex max-w-6xl items-center gap-6 px-4 py-3">
             <Link to="/" className="flex items-center gap-2 text-white">
+              <img src="/logo.jpg" alt="Pit Cash" className="h-9 w-9 rounded-md object-cover" />
               <span className="font-display text-2xl font-black italic tracking-tight">PIT</span>
-              <span className="font-display text-2xl font-light tracking-tight text-white/70">CASH</span>
+              <span className="font-display text-2xl font-light italic tracking-tight text-white/80">CASH</span>
             </Link>
             <nav className="ml-2 hidden items-center gap-1 font-display text-lg font-semibold text-white/70 sm:flex">
               {NAV.map((n) => (
