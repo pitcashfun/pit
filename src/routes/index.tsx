@@ -14,7 +14,7 @@ function Home() {
   const cars = usePit((s) => s.cars);
   return (
     <Shell>
-      <Shot src="/shots/hero.jpg" kicker="The box" title="PIT CASH" tall />
+      <Shot src="/shots/hero.jpg" kicker="The box" title="PIT CASH" tall align="right" />
 
       <div className="mt-6">
         <GarageGrid />
