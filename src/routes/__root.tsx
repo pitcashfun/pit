@@ -11,7 +11,7 @@ export const Route = createRootRoute({
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       { title: "PITCASH · the box" },
-      { name: "theme-color", content: "#09090b" },
+      { name: "theme-color", content: "#15151e" },
       {
         name: "description",
         content: "Pitcash. The box. Three sectors. Twenty cars. LetsCash tax in ETH.",
@@ -24,7 +24,7 @@ export const Route = createRootRoute({
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
       {
         rel: "stylesheet",
-        href: "https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap",
+        href: "https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Titillium+Web:ital,wght@0,400;0,600;0,700;0,900;1,700;1,900&display=swap",
       },
       { rel: "manifest", href: "/__grok/manifest.webmanifest" },
       { rel: "apple-touch-icon", href: "/__grok/icon-180.png" },

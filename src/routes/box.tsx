@@ -47,7 +47,7 @@ function Box() {
   return (
     <Shell>
       <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-mute">Box</p>
-      <h1 className="mt-2 font-display text-5xl font-semibold tracking-tight">Stop or DNF.</h1>
+      <h1 className="mt-2 font-display text-5xl font-black italic tracking-tight">Stop or DNF.</h1>
       <p className="mt-3 max-w-xl text-mute">
         One stop per stint. Soft is free. Medium and hard raise weight. First {GRID_MAX} cars. Anyone can throw the flag when the clock dies — 1% bounty.
       </p>
@@ -55,7 +55,7 @@ function Box() {
       <div className="mt-8 grid gap-4 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)]">
         <div className="space-y-4">
           <StintClock />
-          <div className="rounded-lg border border-line bg-panel p-5">
+          <div className="rounded-2xl border border-line bg-panel p-5">
             <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-mute">Compound</p>
             <div className="mt-3 flex flex-wrap gap-2">
               {COMPOUND.map((c) => (

@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { shortAddr, useWallet } from "@/lib/wallet";
 
-export function Connect() {
+export function Connect({ night = false }: { night?: boolean }) {
   const address = useWallet((s) => s.address);
   const open = useWallet((s) => s.open);
   const wallets = useWallet((s) => s.wallets);
@@ -13,14 +13,13 @@ export function Connect() {
 
   useEffect(() => listen(), [listen]);
 
+  const btn = night
+    ? "rounded-md border border-white/30 bg-white px-4 py-1.5 text-sm font-semibold text-night"
+    : "rounded-md bg-night px-4 py-2 text-sm font-semibold text-white";
+
   if (address) {
     return (
-      <button
-        type="button"
-        onClick={disconnect}
-        className="rounded-md bg-accent px-4 py-2 text-sm font-medium text-accent-fg"
-        title="Disconnect"
-      >
+      <button type="button" onClick={disconnect} className={btn} title="Disconnect">
         {shortAddr(address)}
       </button>
     );
@@ -28,15 +27,11 @@ export function Connect() {
 
   return (
     <div className="relative">
-      <button
-        type="button"
-        onClick={() => setOpen(!open)}
-        className="rounded-md border border-line px-4 py-2 text-sm font-medium"
-      >
+      <button type="button" onClick={() => setOpen(!open)} className={btn}>
         Connect
       </button>
       {open ? (
-        <div className="absolute right-0 z-20 mt-2 w-64 rounded-lg border border-line bg-panel p-3">
+        <div className="absolute right-0 z-30 mt-2 w-64 rounded-2xl border border-line bg-panel p-3 text-ink shadow-lg">
           <p className="px-2 pb-2 text-xs text-mute">Robinhood 4663</p>
           {wallets.length === 0 ? (
             <button

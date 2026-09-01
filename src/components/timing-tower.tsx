@@ -15,7 +15,7 @@ function short(who: string) {
 export function TimingTower({ cars }: { cars: Car[] }) {
   const rows = Array.from({ length: GRID_MAX }, (_, i) => cars[i] ?? null);
   return (
-    <div className="overflow-hidden rounded-lg border border-line bg-panel">
+    <div className="overflow-hidden rounded-2xl border border-line bg-panel">
       <div className="grid grid-cols-[2rem_1fr_3.2rem_3.2rem_3.2rem_4.5rem] gap-0 border-b border-line px-3 py-2 font-mono text-[10px] uppercase tracking-[0.16em] text-mute">
         <span>P</span>
         <span>Car</span>

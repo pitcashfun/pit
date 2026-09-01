@@ -1,21 +1,23 @@
 @import "tailwindcss";
 
 @theme {
-  --color-bg: #09090b;
-  --color-panel: #121214;
-  --color-ink: #f4f4f5;
-  --color-mute: #8b8b93;
-  --color-line: #26262b;
-  --color-accent: #d4d4d8;
-  --color-accent-fg: #09090b;
+  --color-bg: #f3efe6;
+  --color-panel: #ffffff;
+  --color-ink: #15151e;
+  --color-mute: #6a6a74;
+  --color-line: #ddd6c8;
+  --color-night: #15151e;
+  --color-night-line: #2a2a33;
+  --color-accent: #ff1800;
+  --color-accent-fg: #ffffff;
   --color-s-purple: #c084fc;
   --color-s-green: #4ade80;
   --color-s-yellow: #facc15;
-  --color-ok: #4ade80;
-  --font-display: "Barlow Condensed", ui-sans-serif, system-ui, sans-serif;
-  --font-sans: "Barlow Condensed", ui-sans-serif, system-ui, sans-serif;
+  --color-ok: #1a7f4b;
+  --font-display: "Titillium Web", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Titillium Web", ui-sans-serif, system-ui, sans-serif;
   --font-mono: "IBM Plex Mono", ui-monospace, monospace;
-  --radius: 0.5rem;
+  --radius: 1rem;
 }
 
 @layer base {
@@ -30,6 +32,26 @@
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
   }
+}
+
+.carbon {
+  background-color: #15151e;
+  background-image:
+    repeating-linear-gradient(
+      -18deg,
+      transparent 0 18px,
+      rgba(255, 255, 255, 0.03) 18px 20px
+    ),
+    repeating-linear-gradient(
+      90deg,
+      #12121a 0 2px,
+      #191922 2px 4px
+    );
+}
+
+.halftone {
+  background-image: radial-gradient(rgba(0, 0, 0, 0.18) 1.1px, transparent 1.2px);
+  background-size: 7px 7px;
 }
 
 .tower {

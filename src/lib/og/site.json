@@ -2,7 +2,7 @@
   "name": "PITCASH",
   "shortName": "PIT",
   "description": "The box. Three sectors. Twenty cars. Tax in ETH.",
-  "themeColor": "#09090b",
-  "backgroundColor": "#09090b",
+  "themeColor": "#15151e",
+  "backgroundColor": "#f3efe6",
   "card": "custom"
 }

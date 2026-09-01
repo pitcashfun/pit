@@ -35,7 +35,7 @@ function Paper() {
   return (
     <Shell>
       <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-mute">Paper</p>
-      <h1 className="mt-2 font-display text-5xl font-semibold tracking-tight">How the box works.</h1>
+      <h1 className="mt-2 font-display text-5xl font-black italic tracking-tight">How the box works.</h1>
       <p className="mt-3 max-w-xl text-mute">
         Infrastructure is a standard pit lane. One rulebook. Many cars. The first race is $PIT itself.
       </p>

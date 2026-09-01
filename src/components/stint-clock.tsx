@@ -20,7 +20,7 @@ export function StintClock() {
   const live = left > 0;
   const pct = live ? Math.min(100, (left / (STINT_SEC * 1000)) * 100) : 0;
   return (
-    <div className="rounded-lg border border-line bg-panel p-5">
+    <div className="rounded-2xl border border-line bg-panel p-5">
       <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-mute">Stint</p>
       <p className="mt-2 font-display text-6xl font-semibold leading-none tracking-tight">{fmt(left)}</p>
       <p className="mt-2 font-mono text-xs text-mute">{live ? "GREEN" : "FLAG WINDOW"}</p>
