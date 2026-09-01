@@ -6,7 +6,8 @@ import { Connect } from "@/components/connect";
 import { TimingTower } from "@/components/timing-tower";
 import { StintClock } from "@/components/stint-clock";
 import { AddressStrip } from "@/components/addresses";
-import { COMPOUND, GRID_MAX, PIT_CA, isAddress } from "@/lib/catalog";
+import { COMPOUND, EXPLORER_URL, GRID_MAX, PIT_CA, isAddress } from "@/lib/catalog";
+import { fmtEth } from "@/lib/chain";
 import { usePit, type CompoundId } from "@/lib/pit";
 import { useWallet } from "@/lib/wallet";
 
@@ -19,31 +20,44 @@ function Box() {
   const flag = usePit((s) => s.flag);
   const stintEndsAt = usePit((s) => s.stintEndsAt);
   const lastFlag = usePit((s) => s.lastFlag);
+  const lastHash = usePit((s) => s.lastHash);
+  const busy = usePit((s) => s.busy);
+  const inBox = usePit((s) => s.inBox);
+  const pitBal = usePit((s) => s.pitBal);
+  const hydrate = usePit((s) => s.hydrate);
   const [compound, setCompound] = useState<CompoundId>(0);
   const [msg, setMsg] = useState("");
   const [now, setNow] = useState(() => Date.now());
   const live = isAddress(PIT_CA);
+  const green = now < stintEndsAt;
+
   useEffect(() => {
     const id = setInterval(() => setNow(Date.now()), 250);
     return () => clearInterval(id);
   }, []);
 
-  function onStop() {
+  useEffect(() => {
+    void hydrate();
+  }, [address, hydrate]);
+
+  async function onStop() {
     if (!address) {
       setMsg("Connect first.");
       return;
     }
-    const err = stop(address, compound);
-    setMsg(err ?? "In the box. Demo grid — chain stop waits for PitStop.");
+    setMsg("Wallet…");
+    const err = await stop(compound);
+    setMsg(err ?? "In the box.");
   }
 
-  function onFlag() {
+  async function onFlag() {
     if (!address) {
       setMsg("Connect first.");
       return;
     }
-    const err = flag(address);
-    setMsg(err ?? "Flag. Stint reset. On-chain flag pays the 20 when PitStop is live.");
+    setMsg("Wallet…");
+    const err = await flag();
+    setMsg(err ?? "Flag thrown. Next stint is green.");
   }
 
   return (
@@ -79,28 +93,48 @@ function Box() {
               ))}
             </div>
             <p className="mt-3 font-mono text-xs text-mute">{COMPOUND[compound].note}</p>
+            {address ? (
+              <p className="mt-2 font-mono text-xs text-mute">
+                bag {fmtEth(pitBal)} $PIT{inBox ? " · already in" : ""}
+              </p>
+            ) : null}
             <div className="mt-5 flex flex-wrap gap-2">
               <button
                 type="button"
-                onClick={onStop}
-                className="rounded-md bg-accent px-5 py-3 text-sm font-medium text-accent-fg"
+                onClick={() => void onStop()}
+                disabled={busy || !green}
+                className="rounded-md bg-accent px-5 py-3 text-sm font-medium text-accent-fg disabled:opacity-40"
               >
-                Stop
+                {busy ? "…" : "Stop"}
               </button>
               <button
                 type="button"
-                onClick={onFlag}
-                disabled={now < stintEndsAt}
+                onClick={() => void onFlag()}
+                disabled={busy || green}
                 className="rounded-md border border-line px-5 py-3 text-sm disabled:opacity-40"
               >
-                Flag
+                {busy ? "…" : "Flag"}
               </button>
               <Connect />
             </div>
             {msg ? <p className="mt-4 font-mono text-xs text-mute">{msg}</p> : null}
             <p className="mt-4 font-mono text-[11px] text-mute">
-              {live ? `PitStop ${PIT_CA}` : "PitStop empty. This wall is the model. LetsCash is second."}
+              {live
+                ? green
+                  ? "Clock live. Stop writes on-chain."
+                  : "Clock dead. Flag opens the next 3:00."
+                : "PitStop empty."}
             </p>
+            {lastHash ? (
+              <a
+                href={`${EXPLORER_URL}/tx/${lastHash}`}
+                target="_blank"
+                rel="noreferrer"
+                className="mt-2 inline-block font-mono text-[11px] text-mute underline"
+              >
+                tx {lastHash.slice(0, 10)}…
+              </a>
+            ) : null}
             {lastFlag ? <p className="mt-2 font-mono text-[11px] text-mute">Last flag {lastFlag.slice(0, 8)}…</p> : null}
           </div>
         </div>

@@ -23,7 +23,7 @@ export const BOUNTY_BPS = 100;
 export const COMPOUND = [
   { id: 0, name: "SOFT", mult: 1, note: "Free stop. Grid only." },
   { id: 1, name: "MEDIUM", mult: 2, note: "Hold $PIT. Double weight." },
-  { id: 2, name: "HARD", mult: 3, note: "Burn a slice. Triple weight." },
+  { id: 2, name: "HARD", mult: 3, note: "Heaviest car on the wall." },
 ] as const;
 
 export function isAddress(v: string) {

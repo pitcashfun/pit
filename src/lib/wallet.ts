@@ -5,7 +5,7 @@ export const RH_HEX = "0x" + CHAIN_ID.toString(16);
 export const RH_RPC = "https://rpc.mainnet.chain.robinhood.com";
 export const RH_EXPLORER = "https://robinhoodchain.blockscout.com";
 
-type Eip = {
+export type Eip = {
   request: (a: { method: string; params?: unknown[] }) => Promise<unknown>;
   on?: (e: string, fn: (...a: unknown[]) => void) => void;
   removeListener?: (e: string, fn: (...a: unknown[]) => void) => void;
@@ -24,6 +24,7 @@ type State = {
   error: string;
   wallets: Discovered[];
   open: boolean;
+  provider: Eip | null;
   setOpen: (v: boolean) => void;
   listen: () => () => void;
   connect: (w?: Discovered) => Promise<void>;
@@ -41,7 +42,7 @@ export function shortAddr(a: string) {
   return `${a.slice(0, 6)}…${a.slice(-4)}`;
 }
 
-async function ensureChain(p: Eip) {
+export async function ensureChain(p: Eip) {
   try {
     await p.request({
       method: "wallet_switchEthereumChain",
@@ -68,14 +69,13 @@ async function ensureChain(p: Eip) {
   }
 }
 
-let active: Eip | null = null;
-
 export const useWallet = create<State>((set, get) => ({
   address: "",
   chainId: null,
   error: "",
   wallets: [],
   open: false,
+  provider: null,
   setOpen: (v) => set({ open: v }),
 
   listen: () => {
@@ -113,11 +113,10 @@ export const useWallet = create<State>((set, get) => ({
       const acc = (await p.request({ method: "eth_requestAccounts" })) as string[];
       await ensureChain(p);
       const cid = hexToInt(await p.request({ method: "eth_chainId" }));
-      active = p;
-      set({ address: acc[0] ?? "", chainId: cid, open: false });
+      set({ address: acc[0] ?? "", chainId: cid, open: false, provider: p });
       p.on?.("accountsChanged", (a: unknown) => {
         const list = a as string[];
-        set({ address: list?.[0] ?? "" });
+        set({ address: list?.[0] ?? "", provider: list?.[0] ? p : null });
       });
       p.on?.("chainChanged", (c: unknown) => set({ chainId: hexToInt(c) }));
     } catch (e: unknown) {
@@ -127,8 +126,7 @@ export const useWallet = create<State>((set, get) => ({
   },
 
   disconnect: () => {
-    active = null;
-    set({ address: "", chainId: null, open: false, error: "" });
+    set({ address: "", chainId: null, open: false, error: "", provider: null });
     get();
   },
 }));
