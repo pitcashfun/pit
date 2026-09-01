@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Shell } from "@/components/shell";
+import { Shot } from "@/components/shot";
 import { GRID_MAX, STINT_SEC } from "@/lib/catalog";
 
 export const Route = createFileRoute("/paper")({ component: Paper });
@@ -34,15 +35,14 @@ const ROWS = [
 function Paper() {
   return (
     <Shell>
-      <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-mute">Paper</p>
-      <h1 className="mt-2 font-display text-5xl font-black italic tracking-tight">How the box works.</h1>
-      <p className="mt-3 max-w-xl text-mute">
+      <Shot src="/shots/compounds.jpg" kicker="Paper" title="How the box works." />
+      <p className="mt-4 max-w-xl text-mute">
         Infrastructure is a standard pit lane. One rulebook. Many cars. The first race is $PIT itself.
       </p>
       <div className="mt-10 grid gap-4 md:grid-cols-2">
         {ROWS.map((r) => (
-          <article key={r.t} className="rounded-lg border border-line bg-panel p-6">
-            <h2 className="font-display text-2xl font-semibold">{r.t}</h2>
+          <article key={r.t} className="rounded-2xl border border-line bg-panel p-6">
+            <h2 className="font-display text-2xl font-black italic">{r.t}</h2>
             <p className="mt-2 text-sm leading-relaxed text-mute">{r.d}</p>
           </article>
         ))}

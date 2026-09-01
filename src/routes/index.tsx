@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Shell } from "@/components/shell";
+import { Shot } from "@/components/shot";
 import { GarageGrid } from "@/components/garage-grid";
 import { TrackMap } from "@/components/track-map";
 import { TimingTower } from "@/components/timing-tower";
@@ -13,13 +14,17 @@ function Home() {
   const cars = usePit((s) => s.cars);
   return (
     <Shell>
-      <GarageGrid />
+      <Shot src="/shots/hero.jpg" kicker="The box" title="PIT CASH" tall />
+
+      <div className="mt-6">
+        <GarageGrid />
+      </div>
 
       <div className="mt-8 overflow-hidden rounded-2xl bg-night">
         <div className="flex flex-wrap items-end justify-between gap-3 px-6 pt-6">
           <div>
             <p className="font-display text-sm font-semibold uppercase tracking-[0.2em] text-white/50">Circuit</p>
-            <h1 className="font-display text-5xl font-black italic leading-none text-white">Pit Cash</h1>
+            <h2 className="font-display text-5xl font-black italic leading-none text-white">Pit Ring</h2>
           </div>
           <p className="pb-1 font-display text-sm text-white/50">
             {GRID_MAX} cars · {STINT_SEC / 60}:00 stint · 10 turns

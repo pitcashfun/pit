@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { Shell } from "@/components/shell";
+import { Shot } from "@/components/shot";
 import { Connect } from "@/components/connect";
 import { TimingTower } from "@/components/timing-tower";
 import { StintClock } from "@/components/stint-clock";
@@ -46,10 +47,10 @@ function Box() {
 
   return (
     <Shell>
-      <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-mute">Box</p>
-      <h1 className="mt-2 font-display text-5xl font-black italic tracking-tight">Stop or DNF.</h1>
-      <p className="mt-3 max-w-xl text-mute">
-        One stop per stint. Soft is free. Medium and hard raise weight. First {GRID_MAX} cars. Anyone can throw the flag when the clock dies — 1% bounty.
+      <Shot src="/shots/stop.jpg" kicker="Box" title="Stop or DNF." />
+      <p className="mt-4 max-w-xl text-mute">
+        One stop per stint. Soft is free. Medium and hard raise weight. First {GRID_MAX} cars. Anyone can throw the flag
+        when the clock dies — 1% bounty.
       </p>
 
       <div className="mt-8 grid gap-4 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)]">
