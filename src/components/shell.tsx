@@ -1,7 +1,7 @@
 import { useEffect, useState, type ReactNode } from "react";
 import { Link } from "@tanstack/react-router";
 import { Connect } from "@/components/connect";
-import { GH_URL, STINT_SEC, TG_URL, TOKEN_TICKER, X_URL } from "@/lib/catalog";
+import { EXPLORER_URL, GH_URL, PIT_CA, STINT_SEC, TG_URL, TOKEN_TICKER, X_URL, isAddress, shortCa } from "@/lib/catalog";
 
 const NAV = [
   { to: "/", label: "Garages" },
@@ -55,6 +55,19 @@ export function Shell({ children }: { children: ReactNode }) {
               </span>
               <span className="text-white/40">·</span>
               <span className="font-semibold">Pit Ring</span>
+              {isAddress(PIT_CA) ? (
+                <>
+                  <span className="text-white/40">·</span>
+                  <a
+                    href={`${EXPLORER_URL}/address/${PIT_CA}`}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="font-mono text-xs text-white/60 hover:text-white"
+                  >
+                    {shortCa(PIT_CA)}
+                  </a>
+                </>
+              ) : null}
             </p>
             <Clock />
           </div>

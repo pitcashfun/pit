@@ -12,7 +12,7 @@ export const EXPLORER_URL = "https://robinhoodchain.blockscout.com";
 
 /** Empty until Remix + LetsCash. Never invent. */
 export const TOKEN_CA = "";
-export const PIT_CA = "";
+export const PIT_CA = "0x74Fe3e0dC82dbDB69D50B854dd6f492f93f74dd9";
 
 export const TAX_BPS = 500;
 export const PLATFORM_BPS = 30;

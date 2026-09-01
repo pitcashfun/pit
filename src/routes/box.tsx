@@ -5,6 +5,7 @@ import { Shot } from "@/components/shot";
 import { Connect } from "@/components/connect";
 import { TimingTower } from "@/components/timing-tower";
 import { StintClock } from "@/components/stint-clock";
+import { AddressStrip } from "@/components/addresses";
 import { COMPOUND, GRID_MAX, PIT_CA, isAddress } from "@/lib/catalog";
 import { usePit, type CompoundId } from "@/lib/pit";
 import { useWallet } from "@/lib/wallet";
@@ -52,6 +53,9 @@ function Box() {
         One stop per stint. Soft is free. Medium and hard raise weight. First {GRID_MAX} cars. Anyone can throw the flag
         when the clock dies — 1% bounty.
       </p>
+      <div className="mt-4">
+        <AddressStrip />
+      </div>
 
       <div className="mt-8 grid gap-4 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)]">
         <div className="space-y-4">

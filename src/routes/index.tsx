@@ -5,6 +5,7 @@ import { GarageGrid } from "@/components/garage-grid";
 import { TrackMap } from "@/components/track-map";
 import { TimingTower } from "@/components/timing-tower";
 import { StintClock } from "@/components/stint-clock";
+import { AddressStrip } from "@/components/addresses";
 import { GRID_MAX, STINT_SEC } from "@/lib/catalog";
 import { usePit } from "@/lib/pit";
 
@@ -15,6 +16,10 @@ function Home() {
   return (
     <Shell>
       <Shot src="/shots/hero.jpg" kicker="The box" title="PIT CASH" tall align="right" />
+
+      <div className="mt-4">
+        <AddressStrip />
+      </div>
 
       <div className="mt-6">
         <GarageGrid />

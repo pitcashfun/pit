@@ -1,7 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Shell } from "@/components/shell";
 import { Shot } from "@/components/shot";
-import { GRID_MAX, STINT_SEC } from "@/lib/catalog";
+import { GRID_MAX, PIT_CA, STINT_SEC, isAddress } from "@/lib/catalog";
+import { AddressStrip } from "@/components/addresses";
 
 export const Route = createFileRoute("/paper")({ component: Paper });
 
@@ -38,7 +39,11 @@ function Paper() {
       <Shot src="/shots/compounds.jpg" kicker="Paper" title="How the box works." />
       <p className="mt-4 max-w-xl text-mute">
         Infrastructure is a standard pit lane. One rulebook. Many cars. The first race is $PIT itself.
+        {isAddress(PIT_CA) ? " PitStop is live. $PIT still waits LetsCash." : ""}
       </p>
+      <div className="mt-6">
+        <AddressStrip />
+      </div>
       <div className="mt-10 grid gap-4 md:grid-cols-2">
         {ROWS.map((r) => (
           <article key={r.t} className="rounded-2xl border border-line bg-panel p-6">
