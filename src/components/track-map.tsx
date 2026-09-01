@@ -1,5 +1,7 @@
 /** Pit Ring — Spielberg-style triangle. Not a championship circuit. */
 
+type Pt = { x: number; y: number };
+
 const TURNS: { n: string; x: number; y: number }[] = [
   { n: "01", x: 508, y: 548 },
   { n: "02", x: 268, y: 392 },
@@ -13,45 +15,123 @@ const TURNS: { n: string; x: number; y: number }[] = [
   { n: "10", x: 948, y: 268 },
 ];
 
-const TRACK =
-  "M 620 470 L 508 548 C 430 500 300 430 268 392 C 180 330 90 280 72 248 C 160 140 380 40 548 52 C 620 90 560 160 498 188 C 420 230 340 250 318 268 C 360 340 430 410 468 428 C 520 390 530 340 538 318 C 620 240 780 140 868 128 C 920 160 960 220 948 268 C 900 340 780 430 680 470 Z";
+/** Centerline vertices. Fillets round every corner. */
+const RING: Pt[] = [
+  { x: 630, y: 458 },
+  { x: 508, y: 548 },
+  { x: 268, y: 392 },
+  { x: 72, y: 248 },
+  { x: 220, y: 128 },
+  { x: 400, y: 56 },
+  { x: 548, y: 52 },
+  { x: 498, y: 188 },
+  { x: 318, y: 268 },
+  { x: 468, y: 428 },
+  { x: 538, y: 318 },
+  { x: 700, y: 208 },
+  { x: 868, y: 128 },
+  { x: 948, y: 268 },
+  { x: 820, y: 372 },
+  { x: 700, y: 448 },
+];
+
+const S1 = [0, 3] as const;
+const S2 = [3, 9] as const;
+const S3 = [9, 0] as const;
+
+type Corner = { from: Pt; to: Pt; r: number; sweep: 0 | 1 };
+
+function sub(a: Pt, b: Pt): Pt {
+  return { x: a.x - b.x, y: a.y - b.y };
+}
+function len(a: Pt) {
+  return Math.hypot(a.x, a.y);
+}
+function norm(a: Pt): Pt {
+  const L = len(a) || 1;
+  return { x: a.x / L, y: a.y / L };
+}
+function fmt(p: Pt) {
+  return `${p.x.toFixed(1)} ${p.y.toFixed(1)}`;
+}
+
+function filletClosed(pts: Pt[], radius: number): Corner[] {
+  const n = pts.length;
+  const corners: Corner[] = [];
+  for (let i = 0; i < n; i++) {
+    const A = pts[(i - 1 + n) % n];
+    const B = pts[i];
+    const C = pts[(i + 1) % n];
+    const vIn = sub(B, A);
+    const vOut = sub(C, B);
+    const dIn = norm(vIn);
+    const dOut = norm(vOut);
+    const back = { x: -dIn.x, y: -dIn.y };
+    const dot = Math.max(-1, Math.min(1, back.x * dOut.x + back.y * dOut.y));
+    const half = Math.acos(dot) / 2;
+    const th = Math.tan(half);
+    if (!Number.isFinite(th) || th < 1e-3) {
+      corners.push({ from: B, to: B, r: 0, sweep: 0 });
+      continue;
+    }
+    const d = Math.min(radius / th, len(vIn) * 0.44, len(vOut) * 0.44);
+    const r = d * th;
+    corners.push({
+      from: { x: B.x + back.x * d, y: B.y + back.y * d },
+      to: { x: B.x + dOut.x * d, y: B.y + dOut.y * d },
+      r,
+      sweep: dIn.x * dOut.y - dIn.y * dOut.x > 0 ? 1 : 0,
+    });
+  }
+  return corners;
+}
+
+function pathAll(corners: Corner[]) {
+  const n = corners.length;
+  let d = `M ${fmt(corners[0].from)}`;
+  for (let i = 0; i < n; i++) {
+    const c = corners[i];
+    if (c.r > 0.8) d += ` A ${c.r.toFixed(1)} ${c.r.toFixed(1)} 0 0 ${c.sweep} ${fmt(c.to)}`;
+    const next = corners[(i + 1) % n];
+    d += ` L ${fmt(next.from)}`;
+  }
+  return `${d} Z`;
+}
+
+function pathSlice(corners: Corner[], a: number, b: number) {
+  const n = corners.length;
+  let d = `M ${fmt(corners[a].from)}`;
+  let i = a;
+  for (;;) {
+    const c = corners[i];
+    if (c.r > 0.8) d += ` A ${c.r.toFixed(1)} ${c.r.toFixed(1)} 0 0 ${c.sweep} ${fmt(c.to)}`;
+    if (i === b) break;
+    const j = (i + 1) % n;
+    d += ` L ${fmt(corners[j].from)}`;
+    i = j;
+  }
+  return d;
+}
+
+const CORNERS = filletClosed(RING, 52);
+const TRACK = pathAll(CORNERS);
+const TRACK_S1 = pathSlice(CORNERS, S1[0], S1[1]);
+const TRACK_S2 = pathSlice(CORNERS, S2[0], S2[1]);
+const TRACK_S3 = pathSlice(CORNERS, S3[0], S3[1]);
 
 export function TrackMap() {
   return (
     <svg viewBox="0 0 1100 640" className="h-auto w-full" aria-label="Pit Ring, three sectors, ten turns">
       <rect width="1100" height="640" fill="#050505" />
 
-      {/* asphalt ribbon */}
-      <path d={TRACK} fill="none" stroke="#1a1a1a" strokeWidth="42" strokeLinejoin="round" strokeLinecap="round" />
-      <path d={TRACK} fill="none" stroke="#2a2a2a" strokeWidth="28" strokeLinejoin="round" strokeLinecap="round" />
+      <path d={TRACK} fill="none" stroke="#1a1a1a" strokeWidth="44" strokeLinejoin="round" strokeLinecap="round" />
+      <path d={TRACK} fill="none" stroke="#2a2a2a" strokeWidth="30" strokeLinejoin="round" strokeLinecap="round" />
 
-      {/* S1 red: T1 → T3 */}
-      <path
-        d="M 620 470 L 508 548 C 430 500 300 430 268 392 C 180 330 90 280 72 248"
-        fill="none"
-        stroke="#ff3b3b"
-        strokeWidth="8"
-        strokeLinecap="round"
-      />
-      {/* S2 cyan: T3 → T7 */}
-      <path
-        d="M 72 248 C 160 140 380 40 548 52 C 620 90 560 160 498 188 C 420 230 340 250 318 268 C 360 340 430 410 468 428"
-        fill="none"
-        stroke="#3dd6ff"
-        strokeWidth="8"
-        strokeLinecap="round"
-      />
-      {/* S3 yellow: T7 → S/F */}
-      <path
-        d="M 468 428 C 520 390 530 340 538 318 C 620 240 780 140 868 128 C 920 160 960 220 948 268 C 900 340 780 430 680 470 L 620 470"
-        fill="none"
-        stroke="#ffe600"
-        strokeWidth="8"
-        strokeLinecap="round"
-      />
+      <path d={TRACK_S1} fill="none" stroke="#ff3b3b" strokeWidth="8" strokeLinecap="round" strokeLinejoin="round" />
+      <path d={TRACK_S2} fill="none" stroke="#3dd6ff" strokeWidth="8" strokeLinecap="round" strokeLinejoin="round" />
+      <path d={TRACK_S3} fill="none" stroke="#ffe600" strokeWidth="8" strokeLinecap="round" strokeLinejoin="round" />
 
-      {/* DRS hashes */}
-      <g stroke="#39ff14" strokeWidth="3" strokeDasharray="4 6">
+      <g stroke="#39ff14" strokeWidth="3" strokeDasharray="4 6" strokeLinecap="round">
         <path d="M 560 500 L 470 545" />
         <path d="M 200 320 L 100 260" />
         <path d="M 820 200 L 900 250" />
@@ -75,11 +155,10 @@ export function TrackMap() {
         </g>
       ))}
 
-      {/* S/F */}
       <g transform="translate(640 448)">
-        <rect width="18" height="18" fill="#111" />
-        <rect width="9" height="9" fill="#f4f4f5" />
-        <rect x="9" y="9" width="9" height="9" fill="#f4f4f5" />
+        <rect width="18" height="18" rx="3" fill="#111" />
+        <rect width="9" height="9" rx="1" fill="#f4f4f5" />
+        <rect x="9" y="9" width="9" height="9" rx="1" fill="#f4f4f5" />
       </g>
 
       <text x="360" y="500" fill="#ff3b3b" fontSize="13" fontFamily="IBM Plex Mono, monospace" letterSpacing="0.2em">
@@ -103,7 +182,7 @@ export function TrackMap() {
 function Callout({ x, y, label, color }: { x: number; y: number; label: string; color: string }) {
   return (
     <g transform={`translate(${x} ${y})`}>
-      <rect width="148" height="28" rx="2" fill={color} />
+      <rect width="148" height="28" rx="8" fill={color} />
       <text
         x="74"
         y="19"
